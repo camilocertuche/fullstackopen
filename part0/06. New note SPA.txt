@@ -1,0 +1,16 @@
+title 0.6: New note (SPA)
+
+note over browser:
+browser creates the new
+note and adds it into
+the "ul" list obtained 
+from the document
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server-->browser: {"message":"note created"}
+
+note over browser:
+browser stays on
+the same page
+end note
