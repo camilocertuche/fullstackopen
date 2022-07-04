@@ -7,11 +7,29 @@ const Button = ({ text, handleClick }) => {
 };
 
 const Statistics = ({ good, neutral, bad }) => {
+  const total = good + neutral + bad;
+
+  const CalcultateAverage = () => {
+    const score = good - bad;
+    const average = score / total;
+    return average;
+  };
+
+  const CalculatePositiveFeedbackPercentage = () => {
+    const positiveFeedback = good / total;
+    return positiveFeedback * 100;
+  };
+
   return (
     <div>
-      <p>good: {good}</p>
-      <p>neutral: {neutral}</p>
-      <p>bad: {bad}</p>
+      <p>
+        good: {good} <br />
+        neutral: {neutral} <br />
+        bad: {bad} <br />
+        all: {total} <br />
+        average: {CalcultateAverage()} <br />
+        positive: {CalculatePositiveFeedbackPercentage()}%
+      </p>
     </div>
   );
 };
