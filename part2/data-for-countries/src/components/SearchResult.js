@@ -2,7 +2,7 @@ import React from "react";
 import CountryList from "./CountryList";
 import Country from "./Country";
 
-const SearchResult = ({ countries }) => {
+const SearchResult = ({ countries, onSelectCountry }) => {
   if (countries.length === 0) {
     return <p>No matches</p>;
   }
@@ -16,7 +16,9 @@ const SearchResult = ({ countries }) => {
     return <p>Too many matches, specify another filter</p>;
   }
 
-  return <CountryList countries={countries} />;
+  return (
+    <CountryList countries={countries} onSelectCountry={onSelectCountry} />
+  );
 };
 
 export default SearchResult;

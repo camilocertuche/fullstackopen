@@ -1,14 +1,17 @@
 import React from "react";
+import CountryListItem from "./CountryListItem";
 
-const CountryList = ({ countries }) => {
+const CountryList = ({ countries, onSelectCountry }) => {
   return (
     <>
       <table>
         <tbody>
-          {countries.map(({ name }) => (
-            <tr key={name.common}>
-              <td>{name.common} </td>
-            </tr>
+          {countries.map((country) => (
+            <CountryListItem
+              key={country.name.common}
+              country={country}
+              onSelectCountry={onSelectCountry}
+            />
           ))}
         </tbody>
       </table>
