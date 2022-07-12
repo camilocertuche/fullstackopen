@@ -2,6 +2,7 @@ import React from "react";
 import LanguageList from "./LanguageList";
 import CountryImage from "./CountryImage";
 import CountryDetails from "./CountryDetails";
+import CountryWeather from "./CountryWeather";
 
 const Country = ({ country }) => {
   return (
@@ -10,6 +11,7 @@ const Country = ({ country }) => {
       <CountryDetails country={country} />
       <LanguageList languages={country.languages} />
       <CountryImage country={country} />
+      <CountryWeather country={country} />
     </div>
   );
 };
