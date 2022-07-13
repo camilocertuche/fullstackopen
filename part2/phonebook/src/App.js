@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setfilter] = useState("");
   const [message, setMessage] = useState(null);
+  const [notificationType, setNotificationType] = useState("success");
 
   useEffect(() => {
     personService.getAll().then((personList) => {
@@ -37,6 +38,14 @@ const App = () => {
     setfilter(event.target.value);
   };
 
+  const showNotification = (message, newNotificationType) => {
+    setMessage(message);
+    setNotificationType(newNotificationType);
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
+  };
+
   const deletePerson = (id) => {
     const person = persons.find((person) => person.id === id);
     if (!window.confirm(`Delete ${person.name}?`)) return;
@@ -45,22 +54,16 @@ const App = () => {
       .deletePerson(id)
       .then(() => {
         setPersons(persons.filter((person) => person.id !== id));
+        showNotification(`Deleted ${person.name}`, "success");
       })
       .catch((error) => {
-        console.log(error);
+        showNotification(`Error deleting ${person.name}`, "error");
       });
   };
 
   const clearInputs = () => {
     setNewName("");
     setNewNumber("");
-  };
-
-  const showNotification = (message) => {
-    setMessage(message);
-    setTimeout(() => {
-      setMessage(null);
-    }, 5000);
   };
 
   const buildConfirmMessage = (name) => {
@@ -80,10 +83,13 @@ const App = () => {
             person.id !== editedPerson.id ? person : updatedPerson
           )
         );
-        showNotification(`Updated ${updatedPerson.name}`);
+        showNotification(`Updated ${updatedPerson.name}`, "success");
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        showNotification(
+          `Information of ${editedPerson.name} has already been removed from server`,
+          "error"
+        );
       });
 
     clearInputs();
@@ -94,10 +100,13 @@ const App = () => {
       .create(newPerson)
       .then((addedPerson) => {
         setPersons(persons.concat(addedPerson));
-        showNotification(`Added ${newPerson.name}`);
+        showNotification(`Added ${newPerson.name}`, "success");
       })
       .catch(() => {
-        alert(`There was an error adding the person ${newPerson.name}`);
+        showNotification(
+          `There was an error adding the person ${newPerson.name}`,
+          "error"
+        );
       });
   };
 
@@ -111,7 +120,7 @@ const App = () => {
     let alreadyExists = false;
 
     if (!newName || !newNumber) {
-      alert("Name and number are required");
+      showNotification("Name and number are required", "error");
       return;
     }
 
@@ -122,7 +131,7 @@ const App = () => {
     }
 
     if (findPersonByNumber()) {
-      alert(`${newNumber} is already added to phonebook`);
+      showNotification(`${newNumber} is already added to phonebook`, "error");
       alreadyExists = true;
     }
 
@@ -135,7 +144,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} notificationType={notificationType} />
       <Filter value={filter} onChange={handleFilterChange} />
 
       <h2>Add a new</h2>
