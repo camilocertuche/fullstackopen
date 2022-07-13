@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personService from "./services/persons";
 import Filter from "./components/Filter";
 import Form from "./components/Form";
 import Persons from "./components/Persons";
@@ -11,8 +11,8 @@ const App = () => {
   const [filter, setfilter] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
+    personService.getAll().then((personList) => {
+      setPersons(personList);
     });
   }, []);
 
@@ -36,10 +36,10 @@ const App = () => {
   };
 
   const addPerson = (newPerson) => {
-    axios
-      .post("http://localhost:3001/persons", newPerson)
-      .then((response) => {
-        setPersons(persons.concat(response.data));
+    personService
+      .create(newPerson)
+      .then((addedPerson) => {
+        setPersons(persons.concat(addedPerson));
       })
       .catch(() => {
         alert(`There was an error adding the person ${newPerson.name}`);
