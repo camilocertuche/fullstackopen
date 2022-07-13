@@ -35,6 +35,17 @@ const App = () => {
     setfilter(event.target.value);
   };
 
+  const addPerson = (newPerson) => {
+    axios
+      .post("http://localhost:3001/persons", newPerson)
+      .then((response) => {
+        setPersons(persons.concat(response.data));
+      })
+      .catch(() => {
+        alert(`There was an error adding the person ${newPerson.name}`);
+      });
+  };
+
   const nameExists = () => persons.find(({ name }) => name === newName);
 
   const numberExists = () => persons.find(({ number }) => number === newNumber);
@@ -54,7 +65,7 @@ const App = () => {
     }
 
     if (!alreadyExists) {
-      setPersons(persons.concat({ name: newName, number: newNumber }));
+      addPerson({ name: newName, number: newNumber });
       setNewName("");
       setNewNumber("");
     }
