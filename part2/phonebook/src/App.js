@@ -35,6 +35,20 @@ const App = () => {
     setfilter(event.target.value);
   };
 
+  const deletePerson = (id) => {
+    const person = persons.find((person) => person.id === id);
+    if (!window.confirm(`Delete ${person.name}?`)) return;
+
+    personService
+      .deletePerson(id)
+      .then(() => {
+        setPersons(persons.filter((person) => person.id !== id));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const addPerson = (newPerson) => {
     personService
       .create(newPerson)
@@ -86,7 +100,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} onDeletePerson={deletePerson} />
     </div>
   );
 };
