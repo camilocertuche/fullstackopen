@@ -49,6 +49,36 @@ const App = () => {
       });
   };
 
+  const clearInputs = () => {
+    setNewName("");
+    setNewNumber("");
+  };
+
+  const buildConfirmMessage = (name) => {
+    return `${name} is already added to phonebook. Replace the old number with a new one?`;
+  };
+
+  const editPerson = (editedPerson) => {
+    if (!window.confirm(buildConfirmMessage(editedPerson.name))) {
+      return;
+    }
+
+    personService
+      .update(editedPerson.id, editedPerson)
+      .then((updatedPerson) => {
+        setPersons(
+          persons.map((person) =>
+            person.id !== editedPerson.id ? person : updatedPerson
+          )
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    clearInputs();
+  };
+
   const addPerson = (newPerson) => {
     personService
       .create(newPerson)
@@ -60,28 +90,34 @@ const App = () => {
       });
   };
 
-  const nameExists = () => persons.find(({ name }) => name === newName);
+  const findPersonByName = () => persons.find(({ name }) => name === newName);
 
-  const numberExists = () => persons.find(({ number }) => number === newNumber);
+  const findPersonByNumber = () =>
+    persons.find(({ number }) => number === newNumber);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     let alreadyExists = false;
 
-    if (nameExists()) {
-      alert(`${newName} is already added to phonebook`);
+    if (!newName || !newNumber) {
+      alert("Name and number are required");
+      return;
+    }
+
+    const person = findPersonByName();
+    if (person && person.number !== newNumber) {
+      editPerson({ ...person, number: newNumber });
       alreadyExists = true;
     }
 
-    if (numberExists()) {
+    if (findPersonByNumber()) {
       alert(`${newNumber} is already added to phonebook`);
       alreadyExists = true;
     }
 
     if (!alreadyExists) {
       addPerson({ name: newName, number: newNumber });
-      setNewName("");
-      setNewNumber("");
+      clearInputs();
     }
   };
 
